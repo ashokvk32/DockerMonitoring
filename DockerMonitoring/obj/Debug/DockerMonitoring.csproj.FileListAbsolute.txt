@@ -1,0 +1,13 @@
+C:\Work\labs\DockerMonitoring\DockerMonitoring\bin\Debug\DockerMonitoring.exe.config
+C:\Work\labs\DockerMonitoring\DockerMonitoring\bin\Debug\DockerMonitoring.exe
+C:\Work\labs\DockerMonitoring\DockerMonitoring\bin\Debug\DockerMonitoring.pdb
+C:\Work\labs\DockerMonitoring\DockerMonitoring\bin\Debug\Docker.DotNet.dll
+C:\Work\labs\DockerMonitoring\DockerMonitoring\bin\Debug\Newtonsoft.Json.dll
+C:\Work\labs\DockerMonitoring\DockerMonitoring\bin\Debug\System.ValueTuple.dll
+C:\Work\labs\DockerMonitoring\DockerMonitoring\bin\Debug\Newtonsoft.Json.xml
+C:\Work\labs\DockerMonitoring\DockerMonitoring\bin\Debug\System.ValueTuple.xml
+C:\Work\labs\DockerMonitoring\DockerMonitoring\obj\Debug\DockerMonitoring.csprojAssemblyReference.cache
+C:\Work\labs\DockerMonitoring\DockerMonitoring\obj\Debug\DockerMonitoring.csproj.CoreCompileInputs.cache
+C:\Work\labs\DockerMonitoring\DockerMonitoring\obj\Debug\DockerMonitoring.csproj.CopyComplete
+C:\Work\labs\DockerMonitoring\DockerMonitoring\obj\Debug\DockerMonitoring.exe
+C:\Work\labs\DockerMonitoring\DockerMonitoring\obj\Debug\DockerMonitoring.pdb
