@@ -1,61 +1,59 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Docker.DotNet;
-using Docker.DotNet.Models;
-using DockerMonitoring.Dtos;
-using Nest;
 
 namespace DockerMonitoring
 {
     /// <summary>
-    /// Connect to docker environments and get performance metrics for containers
+    /// Main class that begins execution. 
     /// </summary>
     public class Program
     {
         public static void Main(string[] args)
         {
-//            var node = new Uri("http://localhost:9200");
-//
-//            var settings = new ConnectionSettings(node).DefaultIndex("testindex1234");
-//
-//            var client = new ElasticClient(settings);
-//            var player = new Player
-//            {
-//                Name = "Zanetti",
-//                Club = "Inter"
-//            };
-//            if (!client.IndexExists("testindex1234").Exists)
-//            {
-//                var response = client.CreateIndex("testindex1234");
-//            }
-            //var response = client.IndexDocument(player);
-            DockerConnect connect = new DockerConnect();
-            connect.ConnectToDocker();
 
-            ElasticsearchClient esClient = new ElasticsearchClient();
-            var response = esClient.Search("dockerweb");
-            foreach (var perfData in response)
+            Console.WriteLine($"What would you like to do \n 1. Start monitoring a docker container. \n 2. Query Elasticsearch for perf data of container");
+            var chosenValue = Console.ReadLine();
+            switch (chosenValue)
             {
-                Console.WriteLine(perfData.Timestamp);
+                case "1":
+                {   // Connect to docker and start collecting data
+                    DockerConnect connect = new DockerConnect();
+                    connect.ConnectToDocker();
+                    break;
+                }
+                case "2":
+                {
+                    // Initialize the es client and look for data given the container name
+                    ElasticsearchClient esClient = new ElasticsearchClient();
+                    Console.WriteLine("Enter the container name to get perf data for");
+                    var name = Console.ReadLine();
+                    var response = esClient.Search(name);
+                    if (response.Count == 0)
+                    {
+                        Console.WriteLine("No data found");
+                    }
+                    else
+                    {
+                        foreach (var perfData in response)
+                        {
+                            Console.WriteLine($"Timestamp: {perfData.Timestamp}, " +
+                                              $"CPU Usage: {perfData.TotalCpuUsage}, Memory Usage: {perfData.TotalMemoryUsage}");
+                        }
+                    }
+                    
+
+                    break;
+                }
+                default:
+                {
+                    Console.WriteLine("Incorrect value");
+                    break;
+                }
             }
 
-            
             Console.ReadLine();
 
         }
-
-        
         
     }
 
-    public class Player
-    {
-        public string Name { get; set; }
-
-        public string Club { get; set; }
-
-    }
 }
