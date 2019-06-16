@@ -15,20 +15,32 @@ namespace DockerMonitoring
     {
         public static void Main(string[] args)
         {
-            //Ubuntu
-            Console.WriteLine("Remote accessing Docker on Ubuntu");
-            DockerClient client = new DockerClientConfiguration(new Uri("http://10.225.64.22:4243")).CreateClient();
-            var ubuntuContainers = GetContainers(client).Result;
-            var firstUbuntuContainerNames = ubuntuContainers.Select(x => x.Names).First();
-            GetContainerStats(client, firstUbuntuContainerNames.First()).Wait();
-            
-            //Windows
-            Console.WriteLine();
-            Console.WriteLine("Remote accessing Docker on Windows");
-            client = new DockerClientConfiguration(new Uri("http://10.225.65.79:2375")).CreateClient();
-            var windowsContainers = GetContainers(client).Result;
-            GetContainerStats(client, "/pingon").Wait();
-            Console.ReadLine();
+            Console.WriteLine("Enter the IP of Ubuntu/ Windows machine with remote docker config enabled");
+            var machineIp = Console.ReadLine();
+            Console.WriteLine("Enter the port that Docker listens to");
+            var machinePort = Console.ReadLine();
+            try
+            {
+                if (!string.IsNullOrEmpty(machineIp) && !string.IsNullOrEmpty(machinePort))
+                {
+                    var uri = new Uri($"http://{machineIp}:{machinePort}");
+                    var dockerClient = new DockerClientConfiguration(uri).CreateClient();
+                    var containers = GetContainers(dockerClient).Result;
+                    Console.WriteLine("Select the docker container to monitor:");
+                    containers.ForEach(x => Console.WriteLine(x.Names.First()));
+
+                    var containerName = Console.ReadLine();
+                    GetContainerStats(dockerClient, containerName).Wait();
+
+                    Console.ReadLine();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
         }
 
         /// <summary>
@@ -36,9 +48,8 @@ namespace DockerMonitoring
         /// </summary>
         /// <param name="client">Instance of a docker environment</param>
         /// <returns>List of containers in the docker</returns>
-        private static async Task<List<ContainerListResponse>> GetContainers(DockerClient client)
+        private static async Task<List<ContainerListResponse>> GetContainers(IDockerClient client)
         {
-            Console.WriteLine("Listing Docker containers:");
             // Limit the number of containers to 10
             var containers = await client.Containers.ListContainersAsync(
                 new ContainersListParameters()
@@ -46,11 +57,6 @@ namespace DockerMonitoring
                     Limit = 10
                 });
             // Print the names of the containers
-            foreach (var container in containers)
-            {
-                Console.WriteLine(container.Names.First());
-            }
-            Console.WriteLine();
             return containers.ToList();
         }
 
@@ -60,7 +66,7 @@ namespace DockerMonitoring
         /// <param name="client">Docker environment instance</param>
         /// <param name="containerName">Name of the container</param>
         /// <returns></returns>
-        private static async Task GetContainerStats(DockerClient client, string containerName)
+        private static async Task GetContainerStats(IDockerClient client, string containerName)
         {
             containerName = containerName.Trim('/');
             Console.WriteLine("Getting performance data for container {0}:", containerName);
@@ -68,7 +74,7 @@ namespace DockerMonitoring
             var statsParameters = new ContainerStatsParameters { Stream = false };
 
             IProgress<ContainerStatsResponse> progress =
-                new Progress<ContainerStatsResponse>(PrintOutStats);
+                new Progress<ContainerStatsResponse>(GetPerformanceStats);
 
             await client.Containers.GetContainerStatsAsync(containerName, statsParameters, progress, CancellationToken.None);
 
@@ -78,7 +84,7 @@ namespace DockerMonitoring
         /// Output the statistics
         /// </summary>
         /// <param name="stats">Statistics for the container</param>
-        private static void PrintOutStats(ContainerStatsResponse stats)
+        private static void GetPerformanceStats(ContainerStatsResponse stats)
         {
             Console.WriteLine($"Timestamp = {stats?.Read}, " +
                                   $"CpuUsage = {stats?.PreCPUStats?.CPUUsage?.TotalUsage}, " +

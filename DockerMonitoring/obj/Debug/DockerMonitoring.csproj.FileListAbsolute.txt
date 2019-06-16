@@ -11,3 +11,7 @@ C:\Work\labs\DockerMonitoring\DockerMonitoring\obj\Debug\DockerMonitoring.csproj
 C:\Work\labs\DockerMonitoring\DockerMonitoring\obj\Debug\DockerMonitoring.csproj.CopyComplete
 C:\Work\labs\DockerMonitoring\DockerMonitoring\obj\Debug\DockerMonitoring.exe
 C:\Work\labs\DockerMonitoring\DockerMonitoring\obj\Debug\DockerMonitoring.pdb
+C:\Work\labs\DockerMonitoring\DockerMonitoring\bin\Debug\Elasticsearch.Net.dll
+C:\Work\labs\DockerMonitoring\DockerMonitoring\bin\Debug\Nest.dll
+C:\Work\labs\DockerMonitoring\DockerMonitoring\bin\Debug\Elasticsearch.Net.xml
+C:\Work\labs\DockerMonitoring\DockerMonitoring\bin\Debug\Nest.xml
